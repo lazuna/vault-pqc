@@ -1,0 +1,8 @@
+- title: Introduction to Cloud Security
+  file: 01_intro_cloud.md
+- title: IAM Best Practices
+  file: 02_iam_practices.md
+- title: Guardrails & Policies
+  file: 03_guardrails.md
+- title: vault-submodule-template
+  file: README.md

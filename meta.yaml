@@ -1,0 +1,8 @@
+title: "Your Submodule Title"
+repo: "vault-your-submodule-name"
+vault_path: "knowledge/<area>/<subfolder>"
+description: "Brief one-liner of the module's purpose"
+author: "Raghav Dinesh"
+status: "active"           # active | experimental | archived
+added_on: "2025-07-08"
+license: "MIT"

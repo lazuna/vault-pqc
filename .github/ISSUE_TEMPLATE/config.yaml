@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Report issues in main Vault
+    url: https://github.com/lazuna/vault/issues
+    about: All feedback or requests must go to the parent vault repository

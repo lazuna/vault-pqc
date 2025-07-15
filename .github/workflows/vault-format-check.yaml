@@ -1,0 +1,64 @@
+name: Vault Submodule Format Check
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install PyYAML
+        run: pip install pyyaml
+
+      - name: Check for Required Files
+        run: |
+          REQUIRED_FILES=("README.md" "meta.yaml" "_index.yaml" "LICENSE")
+          for file in "${REQUIRED_FILES[@]}"; do
+            if [[ ! -f "$file" ]]; then
+              echo "::error::Missing required file: $file"
+              exit 1
+            fi
+          done
+          echo "✅ Required files present."
+
+      - name: Check License
+        run: |
+          LICENSE=$(grep "^license:" meta.yaml | awk '{print $2}' | tr -d '"')
+          if [[ "$LICENSE" != "MIT" && "$LICENSE" != "CC-BY-4.0" && "$LICENSE" != "CC-BY-NC-SA-4.0" ]]; then
+            echo "::error::Invalid license type: $LICENSE"
+            exit 1
+          fi
+          echo "✅ License accepted."
+
+      - name: Enforce Folder Depth
+        run: |
+          DEPTH=$(find . -type d | awk -F"/" '{print NF}' | sort -nr | head -n1)
+          if (( DEPTH > 6 )); then
+            echo "::warning::Folder nesting too deep: $DEPTH levels"
+          else
+            echo "✅ Folder structure OK."
+          fi
+
+      - name: Check _index.yaml is up to date
+        run: |
+          cp _index.yaml _index.original.yaml
+          python3 tools/generate_or_update_index.py
+          if ! diff -q _index.yaml _index.original.yaml > /dev/null; then
+            echo "::error:: _index.yaml is not up to date. Please run: python tools/generate_or_update_index.py"
+            echo "=== Diff Suggestion ==="
+            diff _index.original.yaml _index.yaml || true
+            exit 1
+          fi
+          echo "✅ _index.yaml is up to date."
+

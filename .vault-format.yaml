@@ -1,0 +1,13 @@
+vault_format:
+  required_files:
+    - README.md
+    - meta.yaml
+    - _index.yaml
+    - LICENSE
+  allowed_licenses:
+    - MIT
+    - CC-BY-4.0
+    - CC-BY-NC-SA-4.0
+  max_file_count: 1000
+  max_depth: 4
+  disallow_issues: true
